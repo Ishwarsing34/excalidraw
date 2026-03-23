@@ -3,7 +3,9 @@
     "compilerOptions": {
         "rootDir": "./src",
         "outDir": "./dist",
+        //  "types": ["@repo/types"],
         "esModuleInterop" : true
-    }
+    },
+     "include": ["src"]
     
 }
