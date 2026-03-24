@@ -1,5 +1,7 @@
+import dotenv from "dotenv";
+dotenv.config();
 
-require("dotenv").config()
+
 
 import { WebSocketServer } from "ws";
 import jwt from 'jsonwebtoken'
