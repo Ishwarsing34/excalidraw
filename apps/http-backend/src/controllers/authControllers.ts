@@ -19,12 +19,16 @@ export async function signUp(req: Request, res: Response) {
       });
     }
 
-    const { email, password, name, photo } = body.data;
+      // console.log("reached 1")
 
+    const { email, password, name, photo } = body.data;
+        console.log("reached 20")
     const existingUser = await prisma.user.findUnique({
       where: { email }
     });
 
+    // console.log("reached 2000")
+    
     if (existingUser) {
       return res.status(409).json({
         message: "User already exists"
@@ -32,6 +36,7 @@ export async function signUp(req: Request, res: Response) {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+      console.log("reached 2")
 
     const user = await prisma.user.create({
       data: {
@@ -41,6 +46,8 @@ export async function signUp(req: Request, res: Response) {
         photo: photo ?? ""
       }
     });
+
+    // console.log("reached 3")
 
     return res.status(201).json({
       message: "User created successfully",
@@ -53,6 +60,7 @@ export async function signUp(req: Request, res: Response) {
     });
 
   } catch (error) {
+    console.log("the error is : - " , error)  
     return res.status(500).json({
       error: "Something went wrong"
     });
