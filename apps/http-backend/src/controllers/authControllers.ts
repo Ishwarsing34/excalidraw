@@ -2,9 +2,9 @@
 import { Request, Response } from "express";
 import { CreateUserSchema, SigninSchema, CreateRoomSchema } from "@repo/common/schema"
 // import {prisma} from "@repo/db/client";
-import {prisma} from "@repo/db/client"
+import { prisma } from "@repo/db/client"
 import bcrypt from 'bcrypt';
-import  jwt  from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "@repo/backend-common/config";
 
 
@@ -19,16 +19,16 @@ export async function signUp(req: Request, res: Response) {
       });
     }
 
-      // console.log("reached 1")
+    // console.log("reached 1")
 
     const { email, password, name, photo } = body.data;
-        console.log("reached 20")
+    console.log("reached 20")
     const existingUser = await prisma.user.findUnique({
       where: { email }
     });
 
     // console.log("reached 2000")
-    
+
     if (existingUser) {
       return res.status(409).json({
         message: "User already exists"
@@ -36,7 +36,7 @@ export async function signUp(req: Request, res: Response) {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-      console.log("reached 2")
+    console.log("reached 2")
 
     const user = await prisma.user.create({
       data: {
@@ -60,7 +60,7 @@ export async function signUp(req: Request, res: Response) {
     });
 
   } catch (error) {
-    console.log("the error is : - " , error)  
+    console.log("the error is : - ", error)
     return res.status(500).json({
       error: "Something went wrong"
     });
@@ -81,36 +81,36 @@ export async function logIn(req: Request, res: Response) {
     }
 
 
-    const {email , password} = body.data;
+    const { email, password } = body.data;
 
     const existingUser = await prisma.user.findUnique({
-        where : {email}
+      where: { email }
     })
 
 
-    if(!existingUser){
-        return res.status(404).json({
-          message : "No User Exists"
-        })
+    if (!existingUser) {
+      return res.status(404).json({
+        message: "No User Exists"
+      })
     }
 
-     const isMatch = await bcrypt.compare(password , existingUser.password);
+    const isMatch = await bcrypt.compare(password, existingUser.password);
 
-     if(!isMatch){
+    if (!isMatch) {
       return res.status(400).json({
-        message : "Incorrect Password"
+        message: "Incorrect Password"
       })
-     }
+    }
 
 
     const token = jwt.sign({
-       userId : existingUser.id
+      userId: existingUser.id
     }, JWT_SECRET)
 
 
     return res.status(200).json({
-        message: "Login Successful",
-        token
+      message: "Login Successful",
+      token
     })
 
 
@@ -127,14 +127,32 @@ export async function room(req: Request, res: Response) {
   try {
 
 
-    const data = CreateRoomSchema.safeParse(req.body);
+    const parsedata = CreateRoomSchema.safeParse(req.body);
 
-    if (!data.success) {
+
+    if (!parsedata.success) {
       return res.json({
         message: "Incorrect Input"
       })
     }
-    res.json({ message: "Signup endpoint working" });
+
+
+
+    const { name } = parsedata.data;
+
+
+    //@ts-ignore
+
+    const userId = req.userId;
+
+
+    await prisma.room.create({
+      data: {
+        slug: name,
+        adminId: userId
+      }
+    })
+    return res.status(200).json({ message: "Signup endpoint working" });
   } catch (err) {
     res.status(500).json({ error: "Something went wrong" });
   }

@@ -18,8 +18,9 @@ export function authcheck(
 
   try {
     const decoded = jwt.verify(token as string, JWT_SECRET as string);
-
-    (req as any).user = decoded;
+      
+    //@ts-ignore
+    (req as any).userId = decoded.userId;
 
     next();
   } catch (err) {
