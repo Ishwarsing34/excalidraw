@@ -10,7 +10,7 @@ export default function Canvas() {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
-        // Set size AFTER mount (important for Next.js)
+        
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
