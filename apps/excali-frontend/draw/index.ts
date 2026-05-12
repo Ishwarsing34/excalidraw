@@ -44,8 +44,8 @@ export function initDraw(
       type: "rect",
       x: startX,
       y: startY,
-      width: rectWidth,   // ✅ FIXED
-      height: rectHeight, // ✅ FIXED
+      width: rectWidth,   
+      height: rectHeight, 
     });
   });
 
@@ -61,7 +61,7 @@ export function initDraw(
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // ✅ redraw previous shapes
+   
     existingShapes.forEach((shape) => {
       if (shape.type === "rect") {
         ctx.strokeRect(shape.x, shape.y, shape.width, shape.height);
